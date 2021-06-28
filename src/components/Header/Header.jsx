@@ -7,6 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import {Grid , Button} from '@material-ui/core';
+import { useSelector } from 'react-redux';
+
+// import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -15,28 +19,28 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
+  toolbar: {
+    background: '#f5f5f5',
+    color: "#111",
   },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
+  cartLink: {
+    alignSelf: "center",
+    textAlign: "right"
+  },
+  appBar: {
+    zIndex: 1000
   },
   
 }));
 
 export default function Dashboard() {
   const classes = useStyles();
+  const items = useSelector(state=>state.cart.items)
  
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
-        <Toolbar>
+      <AppBar  className={classes.appBar} position="relative">
+        <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
             className={classes.menuButton}
@@ -45,14 +49,18 @@ export default function Dashboard() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Omar Store
-          </Typography>
+          <Grid item xs>
+            <Button to="/">
+              <Typography variant="h4">
+                Omar Store
+              </Typography>
+            </Button>
+          </Grid>
           
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
+          <div key={16516} className={classes.grow} />
+          <div key={1651621}>
             <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={1} color="secondary">
+              <Badge badgeContent={items.length} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
