@@ -1,41 +1,40 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import ListSubheader from '@material-ui/core/ListSubheader';
+import { Container, Grid } from '@material-ui/core'
+import ActiveCat from './ActiveCategory';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden',
+    justifyContent: 'flex-start',
+    overflowy: 'scroll',
     backgroundColor: theme.palette.background.paper,
+    height:"fit-content"
   },
-  gridList: {
-    width: 500,
-    height: 450,
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
   },
 }));
 
 function TitlebarGridList(props) {
   const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <GridList cellHeight={180} className={classes.gridList}>
-        <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
-          <ListSubheader component="div">{props.categories.active?.toUpperCase() || "Empty"}</ListSubheader>
-        </GridListTile>
-        {props.children}
-      </GridList>
-    </div>
+    <React.Fragment>
+      <ActiveCat categories={props.categories} />
+      <Container className={classes.cardGrid} maxWidth="md">
+        <Grid container className={classes.root}>
+          {props.children}
+        </Grid>
+      </Container>
+    </React.Fragment>
   );
 }
 
 // 1- add the state to this component props
 const mapStateToProps = state => ({
-    categories: state.categoriesReducer,
+  categories: state.categoriesReducer,
 });
 export default connect(mapStateToProps)(TitlebarGridList);

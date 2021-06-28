@@ -4,8 +4,8 @@ import App from './components/App';
 import { Provider } from 'react-redux';
 import {createStore} from 'redux';
 import allReducers from './reducers';
-
-const store = createStore(allReducers);
+import {composeWithDevTools} from 'redux-devtools-extension';
+const store = createStore(allReducers , composeWithDevTools());
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -9,11 +8,15 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TitlebarGridList from './Grid';
+import { addToCart } from '../../reducers/productsreducer';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 
 const useStyles = makeStyles({
     root: {
         maxWidth: 345,
+        margin: "1rem"
     },
     media: {
         height: 140,
@@ -21,30 +24,34 @@ const useStyles = makeStyles({
 });
 
 function MediaCard(props) {
-    const classes = useStyles();
+    const dispatch = useDispatch();
 
+    const classes = useStyles();
     return (
         <Card className={classes.root}>
-            <CardActionArea>
+            <CardActionArea key={321}>
                 <CardMedia
                     className={classes.media}
                     image={props.item.image}
-                    title={props.item.name}
+                    title={props.item.item}
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {props.item.name}
+                    <Typography key={322} gutterBottom variant="h5" component="h2">
+                        {props.item.item}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
+                    <Typography key={159} variant="body2" color="textSecondary" component="p">
                         {props.item.description}
+                    </Typography>
+                    <Typography key={15654} variant="body2" color="textSecondary" component="p">
+                        {props.item.inventory}
                     </Typography>
                 </CardContent>
             </CardActionArea>
-            <CardActions>
-                <Button size="small" color="primary">
+            <CardActions key={123}>
+                <Button key={1} onClick={()=>{dispatch(addToCart({item:props.item.item, category:props.item.category}))}} size="small" color="primary">
                     ADD TO CART
                 </Button>
-                <Button size="small" color="primary">
+                <Button key={2} size="small" color="primary">
                     PRODUCT DETAILS
                 </Button>
             </CardActions>
@@ -55,17 +62,10 @@ function MediaCard(props) {
 
 
 function Products(props) {
+    const filteredProduct = useSelector(state => state.productsReducer.filteredProduct);
     return (
         <TitlebarGridList>
-                {props.products.filteredProduct.map((item, idx) => <MediaCard item={item} />)}
-        </TitlebarGridList>)
-
+            {filteredProduct.map((item, idx) => <MediaCard key={idx*(idx+123)} item={item} addToCart={addToCart} />)}
+        </TitlebarGridList>);
 }
-
-const mapStateToProps = state => ({
-    products: state.productsReducer,
-});
-
-
-//3. connect your component and export it after its connected to redux store
-export default connect(mapStateToProps)(Products);
+export default Products;
