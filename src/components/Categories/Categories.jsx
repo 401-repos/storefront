@@ -1,28 +1,43 @@
 import React from 'react';
 import { changeCategory } from '../../reducers/categoriesReducer';
 import { connect } from 'react-redux';
+import { Paper, Tab, Tabs } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-function Categories(props) {  
+
+const useStyles = makeStyles({
+    root: {
+        maxWidth: 345,
+        width: "100vw",
+        flexGrow: 1,
+    },
+
+});
+function Categories(props) {
+    const classes = useStyles();
     return (
-        <nav>
-            <ul>
-                {props.categories.categories.map((item,idx) => <li key={idx}><a onClick={(e)=>{
-                    e.preventDefault();
-                    props.changeCategory(item.name);
-                }} href='/'>{item.displayName}</a></li>)}
-            </ul>
-        </nav>
-    );
+        <Paper className={classes.root}>
+            <Tabs
+                value={props.categories.active}
+                indicatorColor="primary"
+                textColor="primary"
+                centered
+            >
+                {props.categories.categories.map((item, idx) => {
+                    return (<Tab value={item.name} label={item.displayName} key={idx + (idx * 2)} onClick={(e) => {
+                        e.preventDefault();
+                        props.changeCategory(item.name);
+                    }} />)
+                })}
+            </Tabs>
+        </Paper>)
+
 }
-// 1- add the state to this component props
+
 const mapStateToProps = state => ({
     categories: state.categoriesReducer,
-    products:state.productsReducer
+    products: state.productsReducer
 });
+const mapDispatchToProps = { changeCategory: changeCategory };
 
-// 2- since I have some actions to use: 
-// add the actions to the component props
-const mapDispatchToProps = {changeCategory: changeCategory};
-
-//3. connect your component and export it after its connected to redux store
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);
