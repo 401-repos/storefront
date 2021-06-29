@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles({
     root: {
-        maxWidth: 345,
+        maxWidth: "25vw",
         margin: "1rem"
     },
     media: {
@@ -43,7 +43,7 @@ function MediaCard(props) {
                         {props.item.description}
                     </Typography>
                     <Typography key={15654} variant="body2" color="textSecondary" component="p">
-                        {props.item.inventory}
+                        In Stock:{props.item.inventory}
                     </Typography>
                 </CardContent>
             </CardActionArea>
@@ -63,6 +63,7 @@ function MediaCard(props) {
 
 function Products(props) {
     const filteredProduct = useSelector(state => state.productsReducer.filteredProduct);
+    console.log(filteredProduct)
     return (
         <TitlebarGridList>
             {filteredProduct.map((item, idx) => <MediaCard key={idx*(idx+123)} item={item} addToCart={addToCart} />)}

@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "axios": "^0.21.1",
     "clsx": "^1.1.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
@@ -19,6 +20,7 @@
     "react-swipeable-views": "^0.14.0",
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.3.0",
     "sass": "^1.35.1",
     "web-vitals": "^1.1.2"
   },

@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     overflowy: 'scroll',
     backgroundColor: theme.palette.background.paper,
     height:"fit-content"
@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
+    width:"95vw",
   },
 }));
 
@@ -24,7 +25,7 @@ function TitlebarGridList(props) {
   return (
     <React.Fragment>
       <ActiveCat categories={props.categories} />
-      <Container className={classes.cardGrid} maxWidth="md">
+      <Container className={classes.cardGrid} >
         <Grid container className={classes.root}>
           {props.children}
         </Grid>
