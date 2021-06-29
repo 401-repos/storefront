@@ -10,7 +10,7 @@ return (
               {props.categories.active?.toUpperCase()}
             </Typography>
             <Typography key={5649841} variant="h5" align="center" color="textSecondary" paragraph>
-              {props.categories.active?props.categories.categories.filter(item => item.name === props.categories.active)[0].description:"EMPTY"}            </Typography>
+              {props.categories.active?props.categories.categories.filter(item => item === props.categories.active)[0]:"EMPTY"}            </Typography>
           </Container>
         </div>
     );

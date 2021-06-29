@@ -1,23 +1,29 @@
 const initState = {
-    categories: [{ name: 'food', displayName: 'FOOD', description:'Buy best food in the world.' }, 
-    { name: 'clothes', displayName: 'CLOTHES', description:'Our collection is unique.' }],
-    active:null
+    categories: [],
+    active: null
 }
 
 const categoriesReducer = (state = initState, action) => {
     const { type, payload } = action;
     switch (type) {
         case 'CHANGE_CATEGORIES':
-            return {...state, active:payload.name}
+            return { ...state, active: payload.name }
+        case 'FITCH_DATA':
+            const categories = new Set();
+            
+            payload.data.forEach(({category})=>{
+                    categories.add(category.toUpperCase())
+            });
+            return {...state, categories:[...categories]}
         default:
             return state;
     }
 }
 
-export const changeCategory= (name) => {
+export const changeCategory = (name) => {
     return {
         type: 'CHANGE_CATEGORIES',
-        payload: {name}
+        payload: { name }
     }
 }
 
