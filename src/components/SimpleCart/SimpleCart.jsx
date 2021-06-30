@@ -5,12 +5,12 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import { TextField } from "@material-ui/core";
-import { changeQty, deleteItem } from "../../reducers/cartReducer";
+import { changeQty, deleteItemDB } from "../../reducers/cartReducer";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { IconButton } from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
-import { incrementQuantity, decrementQuantity, notCartItem } from "../../reducers/productsreducer";
+import { incrementQuantityDB, decrementQuantityDB, notCartItem } from "../../reducers/productsreducer";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +31,7 @@ export default function SimpleCart() {
     return (
         <List dense className={classes.root}>
             {items.map((item, idx) => {
+                console.log(item)
                 return (
                     <ListItem key={idx} button>
                         <ListItemText primary={item.item.split(' ').slice(0,5).join(' ')} />
@@ -39,14 +40,14 @@ export default function SimpleCart() {
                                 style={{ width: "3rem" }}
                                 id="outlined-number"
                                 onChange={(e) => {
-                                    const payload = { item: item.item, qty: e.target.value, category: item.category, activeCategory }
+                                    const payload = {id:item.id, item: item.item, qty: e.target.value, category: item.category, activeCategory }
                                     if (parseInt(e.target.value) < 1) {
                                         dispatch(notCartItem(payload))
                                     }
                                     if (parseInt(item.quantity) > parseInt(e.target.value)) {
-                                        dispatch(decrementQuantity(payload))
+                                        dispatch(decrementQuantityDB(payload))
                                     } else {
-                                        dispatch(incrementQuantity(payload))
+                                        dispatch(incrementQuantityDB(payload))
                                     }
                                     dispatch(changeQty(payload));
                                 }}
@@ -59,14 +60,15 @@ export default function SimpleCart() {
                                 }}
                                 InputProps={{
                                     inputProps: {
-                                        max: products.filter(elem => elem.item === item.item)[0].inventory+item.quantity,
+                                        max: parseInt(products.filter(elem => elem.item === item.item)[0].inventory)+item.quantity,
                                         min: 0
                                     }
                                 }}
                             />
                             <IconButton onClick={() => {
-                                const payload = { item: item.item, qty: item.quantity, category: item.category , activeCategory}
-                                dispatch(deleteItem(payload));
+                                const qty = parseInt(item.quantity)
+                                const payload = { item: item.item, qty, category: item.category , activeCategory, id:item.id}
+                                dispatch(deleteItemDB(payload));
                                 dispatch(notCartItem(payload))
                             }} aria-label="delete">
                                 <DeleteIcon />
