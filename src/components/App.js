@@ -4,23 +4,14 @@ import Copyright from './Footer/Footer';
 import Products from './Products/Products';
 import SimpleCart from './SimpleCart/SimpleCart';
 import { useEffect } from 'react';
-import { fetchDataAction } from '../reducers/productsreducer';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux'
-
+import {fetchData} from '../reducers/productsreducer'
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
-    // console.log('use eeff')
-    //   fetchData();
-    axios.get('https://api-server-0.herokuapp.com/products')
-      .then(resp => {
-        
-        dispatch(fetchDataAction(resp.data))
-      }).catch(err => {
-        console.log(err.message)
-      });// eslint-disable-next-line
+    dispatch( fetchData())
+    // eslint-disable-next-line
   }, []);
   const cart = useSelector(state=>state.cart.items)
   return (

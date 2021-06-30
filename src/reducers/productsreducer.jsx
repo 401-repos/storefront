@@ -17,8 +17,7 @@ const productsReducer = (state = initState, action) => {
         case 'ADD_TO_CART':
             const allProducts = state.allProducts.map(elem => {
                 if (elem.item === payload.item && !elem.cartItem) {
-                    let inv = elem.inventory - 1;
-                    return { ...elem, inventory: inv, cartItem: true }
+                    return { ...payload, cartItem: true }
                 }
                 return elem;
             });
@@ -27,7 +26,7 @@ const productsReducer = (state = initState, action) => {
         case 'INCREMENT_QUANTITY':
             for (let item of products) {
                 if (item.item === payload.item) {
-                    item.inventory--;
+                    item.inventory = parseInt(payload.inventory);
                 }
             }
             if (payload.activeCategory.toLowerCase() === payload.category) {
@@ -40,7 +39,7 @@ const productsReducer = (state = initState, action) => {
         case 'DECREMENT_QUANTITY':
             for (let item of products) {
                 if (item.item === payload.item) {
-                    item.inventory += 1;
+                    item.inventory= parseInt(payload.inventory);
                 }
             }
             if (payload.activeCategory.toLowerCase() === payload.category) {
@@ -65,7 +64,9 @@ const productsReducer = (state = initState, action) => {
         case 'DELETE_ITEM':
             for (let product of products) {
                 if (product.item === payload.item) {
-                    product.inventory += parseInt(payload.qty);
+                    product.cartItem = false;
+
+                    product.inventory =parseInt(payload.inventory);
                 }
             }
             if (payload.activeCategory.toLowerCase() === payload.category) {
@@ -84,6 +85,20 @@ export const addToCart = (item) => {
         payload: item
     }
 }
+export const addToCartDB = (item)=>dispatch => {
+    if(!item.isCartItem){
+
+        axios.put('https://api-server-0.herokuapp.com/products/increment/' + item.id, {},{headers:{
+            "Access-Control-Allow-Origin":"https://api-server-0.herokuapp.com/"
+        }}).then(res => {
+            dispatch(addToCart({...res.data,activeCategory:item.activeCategory}))
+        }).catch(err => {
+            console.log(err.message)
+        });
+    }else{
+        dispatch({type:"ANY"})        
+    }
+}
 
 export const incrementQuantity = (item) => {
     return {
@@ -91,17 +106,32 @@ export const incrementQuantity = (item) => {
         payload: item
     }
 }
+export const incrementQuantityDB = (item) =>dispatch => {
+    console.log("increment 1111111")
+    axios.put('https://api-server-0.herokuapp.com/products/increment/' + item.id, {},{headers:{
+        "Access-Control-Allow-Origin":"https://api-server-0.herokuapp.com/"
+    }}).then(res => {
+        console.log("increment 222222222")
+        dispatch(incrementQuantity({...res.data,activeCategory:item.activeCategory}))
+    }).catch(err => {
+        console.log(err.message)
+    });
+}
 export const decrementQuantity = (item) => {
     return {
         type: 'DECREMENT_QUANTITY',
         payload: item
     }
 }
-// export const decrementQuantityDB =(item) =>dispatch=>{
-//     axios.put('https://api-server-0.herokuapp.com/products/'+item.id , {}).then(res=>{
-//         dispatch(decrementQuantity(item))
-//     })
-// }
+export const decrementQuantityDB = (item) => dispatch => {
+    axios.put('https://api-server-0.herokuapp.com/products/decrement/' + item.id, {},{headers:{
+        "Access-Control-Allow-Origin":"https://api-server-0.herokuapp.com/"
+    }}).then(res => {
+        dispatch(decrementQuantity({...res.data,activeCategory:item.activeCategory}))
+    }).catch(err => {
+        console.log(err.message)
+    });
+}
 export const notCartItem = (item) => {
     return {
         type: 'NOT_CART_ITEM',
@@ -116,5 +146,17 @@ export const fetchDataAction = (data) => {
         }
     }
 }
+
+export const fetchData = function () {
+    return (dispatch) => {
+        axios.get('https://api-server-0.herokuapp.com/products')
+            .then(resp => {
+                dispatch(fetchDataAction(resp.data));
+            }).catch(err => {
+                console.log(err.message)
+            });
+    }
+}
+
 
 export default productsReducer;

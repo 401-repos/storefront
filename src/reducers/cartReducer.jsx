@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const initState = {
     items: [],
     totalPrice: 0,
@@ -16,7 +18,7 @@ function cartReducer(state = initState, action) {
             }
             if (!flag) {
                 const items = [...state.items];
-                items.push({ item: payload.item, quantity: 1, category: payload.category })
+                items.push({ item: payload.item, quantity: 1, category: payload.category, id:payload._id })
                 return { ...state, items };
             } else {
                 return state;
@@ -63,5 +65,14 @@ export const deleteItem = (item) => {
             qty: item.qty
         }
     }
+}
+export const deleteItemDB = (item) =>dispatch => {
+    axios.put('https://api-server-0.herokuapp.com/products/delete/' + item.id, {qty:item.qty},{headers:{
+        "Access-Control-Allow-Origin":"https://api-server-0.herokuapp.com/"
+    }}).then(res => {
+        dispatch(deleteItem({...res.data,activeCategory:item.activeCategory}))
+    }).catch(err => {
+        console.log(err.message)
+    });
 }
 export default cartReducer;

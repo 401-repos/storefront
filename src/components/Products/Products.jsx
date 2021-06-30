@@ -8,7 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TitlebarGridList from './Grid';
-import { addToCart } from '../../reducers/productsreducer';
+import { addToCartDB } from '../../reducers/productsreducer';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
@@ -25,7 +25,6 @@ const useStyles = makeStyles({
 
 function MediaCard(props) {
     const dispatch = useDispatch();
-
     const classes = useStyles();
     return (
         <Card className={classes.root}>
@@ -48,7 +47,12 @@ function MediaCard(props) {
                 </CardContent>
             </CardActionArea>
             <CardActions key={123}>
-                <Button key={1} onClick={()=>{dispatch(addToCart({item:props.item.item, category:props.item.category}))}} size="small" color="primary">
+                <Button key={1} onClick={() => {
+                    dispatch(addToCartDB({
+                        isCartItem: props.item.cartItem ? props.item.cartItem : false,
+                        item: props.item.item, category: props.item.category, id: props.item._id
+                    }))
+                }} size="small" color="primary">
                     ADD TO CART
                 </Button>
                 <Button key={2} size="small" color="primary">
@@ -61,12 +65,11 @@ function MediaCard(props) {
 
 
 
-function Products(props) {
+function Products() {
     const filteredProduct = useSelector(state => state.productsReducer.filteredProduct);
-    console.log(filteredProduct)
     return (
         <TitlebarGridList>
-            {filteredProduct.map((item, idx) => <MediaCard key={idx*(idx+123)} item={item} addToCart={addToCart} />)}
+            {filteredProduct.map((item, idx) => <MediaCard key={idx * (idx + 123)} item={item} />)}
         </TitlebarGridList>);
 }
 export default Products;
