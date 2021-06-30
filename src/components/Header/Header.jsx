@@ -9,7 +9,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import {Grid , Button} from '@material-ui/core';
 import { useSelector } from 'react-redux';
-
+import { Link } from 'react-router-dom';
 // import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,20 +50,25 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Grid item xs>
-            <Button to="/">
+          <Link style={{textDecoration:"none"}} to='/'>
+
+            <Button  to="/">
               <Typography variant="h4">
                 Omar Store
               </Typography>
             </Button>
+          </Link>
           </Grid>
           
           <div key={16516} className={classes.grow} />
           <div key={1651621}>
+          <Link to='/checkout'>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={items.length} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
+          </Link>
           </div>
         </Toolbar>
       </AppBar>
