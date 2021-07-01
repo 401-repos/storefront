@@ -16,7 +16,7 @@ function Categories(props) {
     const classes = useStyles();
     return (
         <AppBar position="static" className={classes.root} style={{zIndex:'100'}}>
-            <Tabs value={props.categories.active}  aria-label="simple tabs example">
+            <Tabs value={props.categories.active || props.categories.categories[0]}  aria-label="simple tabs example">
                 {props.categories.categories.map((item, idx) => {
                     return (<Tab value={item} key={idx + (idx * 2)} label={item} onClick={(e) => {
                         e.preventDefault();

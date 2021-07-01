@@ -2,7 +2,8 @@ import axios from "axios";
 
 const initState = {
     allProducts: [],
-    filteredProduct: []
+    filteredProduct: [],
+    productDetailed: {}
 };
 
 const productsReducer = (state = initState, action) => {
@@ -22,7 +23,7 @@ const productsReducer = (state = initState, action) => {
                 return elem;
             });
             let filteredProduct = allProducts.filter(item => item.inventory > 0 && item.category === payload.category);
-            return { allProducts, filteredProduct }
+            return { ...state,allProducts, filteredProduct }
         case 'INCREMENT_QUANTITY':
             for (let item of products) {
                 if (item.item === payload.item) {
@@ -39,7 +40,7 @@ const productsReducer = (state = initState, action) => {
         case 'DECREMENT_QUANTITY':
             for (let item of products) {
                 if (item.item === payload.item) {
-                    item.inventory= parseInt(payload.inventory);
+                    item.inventory = parseInt(payload.inventory);
                 }
             }
             if (payload.activeCategory.toLowerCase() === payload.category) {
@@ -49,6 +50,8 @@ const productsReducer = (state = initState, action) => {
                 return { ...state, allProducts: products };
 
             }
+        case "DETAILS":
+            return { ...state, productDetailed: {...payload} };
         case 'NOT_CART_ITEM':
             for (let item of products) {
                 if (item.item === payload.item) {
@@ -66,7 +69,7 @@ const productsReducer = (state = initState, action) => {
                 if (product.item === payload.item) {
                     product.cartItem = false;
 
-                    product.inventory =parseInt(payload.inventory);
+                    product.inventory = parseInt(payload.inventory);
                 }
             }
             if (payload.activeCategory.toLowerCase() === payload.category) {
@@ -85,18 +88,20 @@ export const addToCart = (item) => {
         payload: item
     }
 }
-export const addToCartDB = (item)=>dispatch => {
-    if(!item.isCartItem){
+export const addToCartDB = (item) => dispatch => {
+    if (!item.isCartItem) {
 
-        axios.put('https://api-server-0.herokuapp.com/products/increment/' + item.id, {},{headers:{
-            "Access-Control-Allow-Origin":"https://api-server-0.herokuapp.com/"
-        }}).then(res => {
-            dispatch(addToCart({...res.data,activeCategory:item.activeCategory}))
+        axios.put('https://api-server-0.herokuapp.com/products/increment/' + item.id, {}, {
+            headers: {
+                "Access-Control-Allow-Origin": "https://api-server-0.herokuapp.com/"
+            }
+        }).then(res => {
+            dispatch(addToCart({ ...res.data, activeCategory: item.activeCategory }))
         }).catch(err => {
             console.log(err.message)
         });
-    }else{
-        dispatch({type:"ANY"})        
+    } else {
+        dispatch({ type: "ANY" })
     }
 }
 
@@ -106,13 +111,13 @@ export const incrementQuantity = (item) => {
         payload: item
     }
 }
-export const incrementQuantityDB = (item) =>dispatch => {
-    console.log("increment 1111111")
-    axios.put('https://api-server-0.herokuapp.com/products/increment/' + item.id, {},{headers:{
-        "Access-Control-Allow-Origin":"https://api-server-0.herokuapp.com/"
-    }}).then(res => {
-        console.log("increment 222222222")
-        dispatch(incrementQuantity({...res.data,activeCategory:item.activeCategory}))
+export const incrementQuantityDB = (item) => dispatch => {
+    axios.put('https://api-server-0.herokuapp.com/products/increment/' + item.id, {}, {
+        headers: {
+            "Access-Control-Allow-Origin": "https://api-server-0.herokuapp.com/"
+        }
+    }).then(res => {
+        dispatch(incrementQuantity({ ...res.data, activeCategory: item.activeCategory }))
     }).catch(err => {
         console.log(err.message)
     });
@@ -124,10 +129,12 @@ export const decrementQuantity = (item) => {
     }
 }
 export const decrementQuantityDB = (item) => dispatch => {
-    axios.put('https://api-server-0.herokuapp.com/products/decrement/' + item.id, {},{headers:{
-        "Access-Control-Allow-Origin":"https://api-server-0.herokuapp.com/"
-    }}).then(res => {
-        dispatch(decrementQuantity({...res.data,activeCategory:item.activeCategory}))
+    axios.put('https://api-server-0.herokuapp.com/products/decrement/' + item.id, {}, {
+        headers: {
+            "Access-Control-Allow-Origin": "https://api-server-0.herokuapp.com/"
+        }
+    }).then(res => {
+        dispatch(decrementQuantity({ ...res.data, activeCategory: item.activeCategory }))
     }).catch(err => {
         console.log(err.message)
     });
@@ -157,6 +164,12 @@ export const fetchData = function () {
             });
     }
 }
+export const productDetailed= function (payload){
+    return {
+        type:"DETAILS",
+        payload
+    }
 
+}
 
 export default productsReducer;

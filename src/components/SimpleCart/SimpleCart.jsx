@@ -31,7 +31,6 @@ export default function SimpleCart() {
     return (
         <List dense className={classes.root}>
             {items.map((item, idx) => {
-                console.log(item)
                 return (
                     <ListItem key={idx} button>
                         <ListItemText primary={item.item.split(' ').slice(0,5).join(' ')} />

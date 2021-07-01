@@ -1,32 +1,41 @@
-import Dashboard from './Header/Header';
-import Categories from './Categories/Categories'
-import Copyright from './Footer/Footer';
-import Products from './Products/Products';
-import SimpleCart from './SimpleCart/SimpleCart';
+import { Switch, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import {fetchData} from '../reducers/productsreducer'
+import { fetchData } from '../reducers/productsreducer'
+import Checkout from './Checkout/Checkout';
+import Main from './Main/Main';
+import ProductDetails from './ProductDetails/ProductDetails';
+import Dashboard from "./Header/Header";
+import Copyright from "./Footer/Footer";
 
 function App() {
   const dispatch = useDispatch();
+  const cart  =  useSelector(state=>state.cart.items)
   useEffect(() => {
-    dispatch( fetchData())
+    dispatch(fetchData())
     // eslint-disable-next-line
   }, []);
-  const cart = useSelector(state=>state.cart.items)
   return (
     <>
       <header>
         <Dashboard />
       </header>
-      {cart.length>0?<div style={{ position: "fixed", right: '10%', width: "20%", zIndex:"1000" }}> <SimpleCart /></div> : null}
+      <main>
 
-      <main style={{ width: "100vw", display: "flex", flexDirection: "column" }}>
-        <Categories />
-        <Products />
+        <Switch>
+          <Route exact path='/'>
+            <Main />
+          </Route>
+          <Route path='/product/:id'>
+            <ProductDetails />
+          </Route>
+          <Route path='/checkout'>
+            <Checkout cart={cart} />
+          </Route>
+        </Switch>
       </main>
       <footer>
-        <Copyright style={{ transform: "translatey(200px)" }} />
+        <Copyright style={{ transform: "translateY(200px)" }} />
       </footer>
     </>
   );
