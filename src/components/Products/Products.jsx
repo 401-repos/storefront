@@ -8,10 +8,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import TitlebarGridList from './Grid';
-import { addToCartDB } from '../../reducers/productsreducer';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import TitlebarGridList from './Grid';
+import { addToCartDB } from '../../reducers/productsreducer';
+import { productDetailed } from '../../reducers/productsreducer';
 
 
 const useStyles = makeStyles({
@@ -56,7 +57,9 @@ function MediaCard(props) {
                 }} size="small" color="primary">
                     ADD TO CART
                 </Button>
-                <Link to={`/product/${props.item._id}`}>
+                <Link to={`/product/${props.item._id}`} onClick={()=>{
+                    dispatch(productDetailed(props.item))
+                }} style={{ textDecoration: "none" }}>
                     <Button key={2} size="small" color="primary">
                         PRODUCT DETAILS
                     </Button>
