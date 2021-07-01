@@ -18,7 +18,7 @@ function cartReducer(state = initState, action) {
             }
             if (!flag) {
                 const items = [...state.items];
-                items.push({ item: payload.item, quantity: 1, category: payload.category, id:payload._id })
+                items.push({ ...payload,item: payload.item, quantity: 1, category: payload.category, id:payload._id })
                 return { ...state, items };
             } else {
                 return state;
